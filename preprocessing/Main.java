@@ -19,7 +19,7 @@ public class Main {
         Instances normalized = NormalizeData.Normalize(reduced);
 
         // Save result
-        SaveData.save(normalized, "output/output_data.arff");
+        SaveData.save(normalized, "output/clean_data.arff");
         // Split data
         SplitData.splitData(normalized);
         System.out.println("Data preprocessing complete!");
