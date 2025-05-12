@@ -1,0 +1,4 @@
+Build and Run by terminal:
+javac -cp ".;lib/weka.jar" Main.java
+java -cp ".;lib/weka.jar" Main
+java --add-opens java.base/java.lang=ALL-UNNAMED -cp ".;lib/weka.jar" Main
