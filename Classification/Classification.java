@@ -3,11 +3,18 @@ import weka.core.SerializationHelper;
 import weka.classifiers.trees.RandomForest;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.Evaluation;
+import weka.classifiers.functions.SMO;
+import weka.classifiers.functions.supportVector.RBFKernel;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.Normalize;
+
+
+
+
 
 import java.util.Random;
 
@@ -21,8 +28,10 @@ public class Classification {
     public static void main(String[] args) throws Exception {
         j48Classifier();
         naiveBayesClassifier();
+        smoClassifier();
         // randForestClassifier();
     }
+    
 
     private static void j48Classifier() throws Exception {
         // 1. Load dataset
@@ -147,5 +156,37 @@ public class Classification {
         System.out.println(eval.toClassDetailsString());
         System.out.println(eval.toMatrixString());
         System.out.printf("Runtime: %.3f seconds\n", (endTime - startTime) / 1000.0);
+    }
+    private static void smoClassifier() throws Exception{
+        Instances data = loadAndSetClass();
+        Normalize norm = new Normalize();
+        norm.setInputFormat(data);
+        data = Filter.useFilter(data,norm);
+
+        SMO svm = new SMO();
+        RBFKernel rbf = new RBFKernel();
+        rbf.setGamma(0.01);
+        svm.setKernel(rbf);
+        svm.setC(1.0);
+
+        Evaluation ev = new Evaluation(data);
+        ev.crossValidateModel(svm, data, 10, new Random(1));
+        svm.buildClassifier(data);
+        printReport("SMO (SVM-RBF)",ev);
+
+
+    }
+    private static Instances loadAndSetClass() throws Exception{
+        Instances data = new DataSource(path).getDataSet();
+        data.setClassIndex(data.numAttributes()-1);
+        return data;
+
+    }
+    private static void printReport(String title,Evaluation eval) throws Exception{
+        System.out.println("==="+title+"===");
+        System.out.println(eval.toSummaryString("=== Summary ===",true));
+        System.out.println(eval.toClassDetailsString("=== Detailed Accuracy by Class ==="));
+        System.out.println(eval.toMatrixString("===Detailed Accuracy by class ==="));
+        System.out.println(eval.toMatrixString("=== Confusion Matrix ==="));
     }
 }

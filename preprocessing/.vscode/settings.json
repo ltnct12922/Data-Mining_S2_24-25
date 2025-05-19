@@ -3,7 +3,10 @@
         "."
     ],
     "java.project.referencedLibraries": [
-        "c:\\Users\\hp\\Desktop\\projects\\Data mining\\Data-Mining_S2_24-25\\lib\\mtj-1.0.4.jar",
-        "c:\\Users\\hp\\Desktop\\projects\\Data mining\\Data-Mining_S2_24-25\\lib\\weka.jar"
+        "lib\\mtj-1.0.4.jar",
+        "lib\\weka.jar"
     ]
+    
 }
+
+
