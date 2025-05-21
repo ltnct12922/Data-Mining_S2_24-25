@@ -1,12 +1,9 @@
 {
-    "java.project.sourcePaths": [
-        "."
-    ],
-    "java.project.referencedLibraries": [
-        "lib\\mtj-1.0.4.jar",
-        "lib\\weka.jar"
-    ]
-    
+  "java.project.sourcePaths": [
+    "."
+  ],
+  "java.project.referencedLibraries": [
+    "lib\\mtj-1.0.4.jar",
+    "lib\\weka.jar"
+  ]
 }
-
-

@@ -18,10 +18,15 @@ public class Main {
         // Normalize
         Instances normalized = NormalizeData.Normalize(reduced);
 
+        Instances selected = AttrSelection.select(normalized);
         // Save result
-        SaveData.save(normalized, "output/clean_data.arff");
+        SaveData.save(selected, "output/clean_data.arff");
         // Split data
-        SplitData.splitData(normalized);
+        SplitData.splitData(selected);
         System.out.println("Data preprocessing complete!");
+        System.out.println("----Data Analysis----");
+        DataSource output = new DataSource("output/clean_data.arff");
+        Instances outputData = output.getDataSet();
+        AttInst.dataAnalysis(outputData);
     }
 }

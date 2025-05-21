@@ -12,15 +12,11 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.Normalize;
 
-
-
-
-
 import java.util.Random;
 
 // 
 public class Classification {
-    public static String path = "clean_data.arff";
+    public static String path = "output/clean_data.arff";
     private static DataSource source;
     private static Instances data;
     private static Evaluation eval;
@@ -31,7 +27,6 @@ public class Classification {
         smoClassifier();
         // randForestClassifier();
     }
-    
 
     private static void j48Classifier() throws Exception {
         // 1. Load dataset
@@ -157,11 +152,12 @@ public class Classification {
         System.out.println(eval.toMatrixString());
         System.out.printf("Runtime: %.3f seconds\n", (endTime - startTime) / 1000.0);
     }
-    private static void smoClassifier() throws Exception{
+
+    private static void smoClassifier() throws Exception {
         Instances data = loadAndSetClass();
         Normalize norm = new Normalize();
         norm.setInputFormat(data);
-        data = Filter.useFilter(data,norm);
+        data = Filter.useFilter(data, norm);
 
         SMO svm = new SMO();
         RBFKernel rbf = new RBFKernel();
@@ -172,19 +168,20 @@ public class Classification {
         Evaluation ev = new Evaluation(data);
         ev.crossValidateModel(svm, data, 10, new Random(1));
         svm.buildClassifier(data);
-        printReport("SMO (SVM-RBF)",ev);
-
+        printReport("SMO (SVM-RBF)", ev);
 
     }
-    private static Instances loadAndSetClass() throws Exception{
+
+    private static Instances loadAndSetClass() throws Exception {
         Instances data = new DataSource(path).getDataSet();
-        data.setClassIndex(data.numAttributes()-1);
+        data.setClassIndex(data.numAttributes() - 1);
         return data;
 
     }
-    private static void printReport(String title,Evaluation eval) throws Exception{
-        System.out.println("==="+title+"===");
-        System.out.println(eval.toSummaryString("=== Summary ===",true));
+
+    private static void printReport(String title, Evaluation eval) throws Exception {
+        System.out.println("===" + title + "===");
+        System.out.println(eval.toSummaryString("=== Summary ===", true));
         System.out.println(eval.toClassDetailsString("=== Detailed Accuracy by Class ==="));
         System.out.println(eval.toMatrixString("===Detailed Accuracy by class ==="));
         System.out.println(eval.toMatrixString("=== Confusion Matrix ==="));
