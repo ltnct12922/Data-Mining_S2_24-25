@@ -153,24 +153,43 @@ public class Classification {
         System.out.printf("Runtime: %.3f seconds\n", (endTime - startTime) / 1000.0);
     }
 
-    private static void smoClassifier() throws Exception {
-        Instances data = loadAndSetClass();
-        Normalize norm = new Normalize();
-        norm.setInputFormat(data);
-        data = Filter.useFilter(data, norm);
+private static void smoClassifier() throws Exception {
+    DataSource source = new DataSource(path);
+    Instances data = source.getDataSet();
 
-        SMO svm = new SMO();
-        RBFKernel rbf = new RBFKernel();
-        rbf.setGamma(0.01);
-        svm.setKernel(rbf);
-        svm.setC(1.0);
-
-        Evaluation ev = new Evaluation(data);
-        ev.crossValidateModel(svm, data, 10, new Random(1));
-        svm.buildClassifier(data);
-        printReport("SMO (SVM-RBF)", ev);
-
+    // Đặt class index (cuối cùng)
+    if (data.classIndex() == -1) {
+        data.setClassIndex(data.numAttributes() - 1);
     }
+
+    // Chuyển numeric sang nominal nếu cần (ví dụ từ attribute 2 đến cuối)
+    NumericToNominal num2nom = new NumericToNominal();
+    num2nom.setAttributeIndices("2-last");  // tùy theo dữ liệu bạn muốn convert thuộc tính nào
+    num2nom.setInputFormat(data);
+    data = Filter.useFilter(data, num2nom);
+
+    // Chuẩn hóa dữ liệu (Normalize)
+    Normalize norm = new Normalize();
+    norm.setInputFormat(data);
+    data = Filter.useFilter(data, norm);
+
+    // Khởi tạo SMO với RBF kernel
+    SMO svm = new SMO();
+    RBFKernel rbf = new RBFKernel();
+    rbf.setGamma(0.01);
+    svm.setKernel(rbf);
+    svm.setC(1.0);
+
+    // Đánh giá bằng cross-validation 10-fold
+    Evaluation ev = new Evaluation(data);
+    ev.crossValidateModel(svm, data, 10, new Random(1));
+
+    // Huấn luyện trên toàn bộ data
+    svm.buildClassifier(data);
+
+    printReport("SMO (SVM-RBF)", ev);
+}
+
 
     private static Instances loadAndSetClass() throws Exception {
         Instances data = new DataSource(path).getDataSet();
