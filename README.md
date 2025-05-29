@@ -9,3 +9,8 @@
 ### Lê Tinh Nhựt: Implement classification/prediction algorithms
 ### Nguyễn Trần Thiên Trí: Implement another algorithm
 ### Lê Công Thái Khang: Model Evaluation and Report
+## How to Run:
+### Click on Classification.java
+### Run in terimnal: 
+### javac -cp ".;lib/weka.jar" Classification.java (Output: Classification.java)
+### java -cp ".;lib/weka.jar" Classification (Output: The result + .model files)
